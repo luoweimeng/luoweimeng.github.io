@@ -342,23 +342,22 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda install numpy</span><br><span class="line">conda install pandas</span><br><span class="line">conda install matplotlib</span><br><span class="line">conda install seaborn</span><br><span class="line">conda install lightgbm</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Install kaggle cli  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install kaggle</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install kaggle</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Copy <code>kaggle.json</code> to gcp. First, you need to set up gcloud compute<br>On your local machine:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud init</span><br></pre></td></tr></table></figure>
+<li><p>Copy <code>kaggle.json</code> to gcp. First, you need to set up gcloud compute<br>  On your local machine:</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud init</span><br></pre></td></tr></table></figure>
+<p>  Then copy <code>kaggle.json</code> to gcp  </p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud compute scp kaggle.json username@instance-1:~</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-<p>Then copy <code>kaggle.json</code> to gcp<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud compute scp kaggle.json username@instance-1:~</span><br></pre></td></tr></table></figure></p>
-<ul>
 <li><p>Download the data  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kaggle competitions download -c talkingdata-adtracking-fraud-detection</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kaggle competitions download -c talkingdata-adtracking-fraud-detection</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Configure Jupyter Notebook<br><a href="https://towardsdatascience.com/running-jupyter-notebook-in-google-cloud-platform-in-15-min-61e16da34d52" target="_blank" rel="noopener">Running Jupyter Notebook on Google Cloud Platform in 15 min</a></p>
+<li><p>Configure Jupyter Notebook<br>  <a href="https://towardsdatascience.com/running-jupyter-notebook-in-google-cloud-platform-in-15-min-61e16da34d52" target="_blank" rel="noopener">Running Jupyter Notebook on Google Cloud Platform in 15 min</a></p>
 </li>
 <li><p>Launch Jupyter notebook</p>
 <pre><code class="bash">jupyter-notebook --no-browser --port=&lt;PORT-NUMBER&gt;
 </code></pre>
-<p><em>YOU ARE ALL SET!</em></p>
+<p>  <em>YOU ARE ALL SET!</em></p>
 </li>
 </ul>
 
