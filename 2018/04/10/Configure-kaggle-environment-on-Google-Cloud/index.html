@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Weimeng&#39;s">
 <meta property="og:description" content="Recently I want to get my hands dirty in the area of machine learning. So I choose to participate in the kaggle competition. As the dataset is quite large, I decided to use Google Cloud Engine as the">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-04-11T02:17:35.999Z">
+<meta property="og:updated_time" content="2018-04-11T02:19:21.268Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Configure kaggle environment on Google Cloud">
 <meta name="twitter:description" content="Recently I want to get my hands dirty in the area of machine learning. So I choose to participate in the kaggle competition. As the dataset is quite large, I decided to use Google Cloud Engine as the">
@@ -322,44 +322,42 @@
 
       
         <p>Recently I want to get my hands dirty in the area of machine learning. So I choose to participate in the kaggle competition. As the dataset is quite large, I decided to use Google Cloud Engine as the platform to do the job.</p>
-<h2 id="Apply-and-set-up-a-Google-Cloud-Engine"><a href="#Apply-and-set-up-a-Google-Cloud-Engine" class="headerlink" title="Apply and set up a Google Cloud Engine"></a>Apply and set up a Google Cloud Engine</h2><h2 id="Configure-the-environment-on-the-ubuntu-machine"><a href="#Configure-the-environment-on-the-ubuntu-machine" class="headerlink" title="Configure the environment on the ubuntu machine"></a>Configure the environment on the ubuntu machine</h2><ul>
+<h2 id="Apply-and-set-up-a-Google-Cloud-Engine"><a href="#Apply-and-set-up-a-Google-Cloud-Engine" class="headerlink" title="Apply and set up a Google Cloud Engine"></a>Apply and set up a Google Cloud Engine</h2><h2 id="Configure-the-environment-on-the-ubuntu-machine"><a href="#Configure-the-environment-on-the-ubuntu-machine" class="headerlink" title="Configure the environment on the ubuntu machine"></a>Configure the environment on the ubuntu machine</h2><ol>
 <li><p>Install the dependency library  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install bzip2</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install bzip2</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Install miniconda for Python3.6  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line">bash Miniconda3-latest-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><br><span class="line">bash Miniconda3-latest-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+<p> Enter <code>yes</code> a few times</p>
 </li>
-</ul>
-<p>Enter <code>yes</code> a few times</p>
-<ul>
 <li><p>Activate <code>.bashrc</code>  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Install <code>pip3</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get -y install python3-pip</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get -y install python3-pip</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Install necessary libraries  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda install numpy</span><br><span class="line">conda install pandas</span><br><span class="line">conda install matplotlib</span><br><span class="line">conda install seaborn</span><br><span class="line">conda install lightgbm</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda install numpy</span><br><span class="line">conda install pandas</span><br><span class="line">conda install matplotlib</span><br><span class="line">conda install seaborn</span><br><span class="line">conda install lightgbm</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Install kaggle cli  </p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install kaggle</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install kaggle</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Copy <code>kaggle.json</code> to gcp. First, you need to set up gcloud compute<br>  On your local machine:</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud init</span><br></pre></td></tr></table></figure>
-<p>  Then copy <code>kaggle.json</code> to gcp  </p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud compute scp kaggle.json username@instance-1:~</span><br></pre></td></tr></table></figure>
+<li><p>Copy <code>kaggle.json</code> to gcp. First, you need to set up gcloud compute<br> On your local machine:</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud init</span><br></pre></td></tr></table></figure>
+<p> Then copy <code>kaggle.json</code> to gcp  </p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcloud compute scp kaggle.json username@instance-1:~</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>Download the data  </p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kaggle competitions download -c talkingdata-adtracking-fraud-detection</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kaggle competitions download -c talkingdata-adtracking-fraud-detection</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Configure Jupyter Notebook<br>  <a href="https://towardsdatascience.com/running-jupyter-notebook-in-google-cloud-platform-in-15-min-61e16da34d52" target="_blank" rel="noopener">Running Jupyter Notebook on Google Cloud Platform in 15 min</a></p>
+<li><p>Configure Jupyter Notebook<br> <a href="https://towardsdatascience.com/running-jupyter-notebook-in-google-cloud-platform-in-15-min-61e16da34d52" target="_blank" rel="noopener">Running Jupyter Notebook on Google Cloud Platform in 15 min</a></p>
 </li>
 <li><p>Launch Jupyter notebook</p>
 <pre><code class="bash">jupyter-notebook --no-browser --port=&lt;PORT-NUMBER&gt;
 </code></pre>
-<p>  <em>YOU ARE ALL SET!</em></p>
+<p><em>YOU ARE ALL SET!</em></p>
 </li>
-</ul>
+</ol>
 
       
     </div>
