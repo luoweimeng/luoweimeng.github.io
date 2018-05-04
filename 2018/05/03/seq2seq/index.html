@@ -79,14 +79,19 @@
 
 
 
+<meta name="description" content="在上一篇文章中，我们介绍了传统的RNN及其变种GRU及LSTM。它们只能处理输出序列为定长的情况。如果要处理输出序列为不定长情况的问题呢？例如机器翻译，例如英文到法语的句子翻译，输入和输出均为不定长。前人提出了seq2seq模型，basic idea是设计一个encoder与decoder，其中encoder将输入序列编码为一个包含输入序列所有信息的context vector \(c\)，dec">
 <meta property="og:type" content="article">
-<meta property="og:title" content="first-post">
-<meta property="og:url" content="http://luoweimeng.github.io/2018/04/08/first-post/index.html">
+<meta property="og:title" content="Seq2seq模型及注意力机制">
+<meta property="og:url" content="http://luoweimeng.github.io/2018/05/03/seq2seq/index.html">
 <meta property="og:site_name" content="Weimeng&#39;s">
+<meta property="og:description" content="在上一篇文章中，我们介绍了传统的RNN及其变种GRU及LSTM。它们只能处理输出序列为定长的情况。如果要处理输出序列为不定长情况的问题呢？例如机器翻译，例如英文到法语的句子翻译，输入和输出均为不定长。前人提出了seq2seq模型，basic idea是设计一个encoder与decoder，其中encoder将输入序列编码为一个包含输入序列所有信息的context vector \(c\)，dec">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-04-08T21:30:22.452Z">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-e0fbb46d897400a384873fc100c442db_r.jpg">
+<meta property="og:updated_time" content="2018-05-04T00:48:45.486Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="first-post">
+<meta name="twitter:title" content="Seq2seq模型及注意力机制">
+<meta name="twitter:description" content="在上一篇文章中，我们介绍了传统的RNN及其变种GRU及LSTM。它们只能处理输出序列为定长的情况。如果要处理输出序列为不定长情况的问题呢？例如机器翻译，例如英文到法语的句子翻译，输入和输出均为不定长。前人提出了seq2seq模型，basic idea是设计一个encoder与decoder，其中encoder将输入序列编码为一个包含输入序列所有信息的context vector \(c\)，dec">
+<meta name="twitter:image" content="https://pic1.zhimg.com/v2-e0fbb46d897400a384873fc100c442db_r.jpg">
 
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://luoweimeng.github.io/2018/04/08/first-post/"/>
+  <link rel="canonical" href="http://luoweimeng.github.io/2018/05/03/seq2seq/"/>
 
 
 
 
 
-  <title>first-post | Weimeng's</title>
+  <title>Seq2seq模型及注意力机制 | Weimeng's</title>
   
 
 
@@ -239,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/04/08/first-post/">
+    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/03/seq2seq/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Weimeng Luo">
@@ -256,7 +261,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">first-post</h1>
+          <h1 class="post-title" itemprop="name headline">Seq2seq模型及注意力机制</h1>
         
 
         <div class="post-meta">
@@ -268,8 +273,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-08T17:30:22-04:00">
-                2018-04-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-03T17:12:28-04:00">
+                2018-05-03
               </time>
             
 
@@ -306,7 +311,47 @@
       
 
       
-        
+        <p>在上一篇文章中，我们介绍了传统的RNN及其变种GRU及LSTM。它们只能处理输出序列为定长的情况。如果要处理输出序列为不定长情况的问题呢？例如机器翻译，例如英文到法语的句子翻译，输入和输出均为不定长。前人提出了seq2seq模型，basic idea是设计一个encoder与decoder，其中encoder将输入序列编码为一个包含输入序列所有信息的context vector <span class="math inline">\(c\)</span>，decoder通过对<span class="math inline">\(c\)</span>的解码获得输入序列的信息，从而得到输出序列。encoder及decoder都通常为RNN循环神经网络。</p>
+<a id="more"></a>
+<h2 id="seq2seq模型">seq2seq模型</h2>
+<div class="figure">
+<img src="https://pic1.zhimg.com/v2-e0fbb46d897400a384873fc100c442db_r.jpg" alt="seq2seq">
+<p class="caption">seq2seq</p>
+</div>
+<h3 id="编码器-encoder">编码器 Encoder</h3>
+<p>编码器的作用是把一个不定长的输入序列<span class="math inline">\(x_1, x_2,\ldots,x_T\)</span>转化成一个定长的context vector <span class="math inline">\(c\)</span>. 该context vector编码了输入序列<span class="math inline">\(x_1, x_2,\ldots,x_T\)</span>的序列。回忆一下循环神经网络，假设该循环神经网络单元为 <span class="math inline">\(f\)</span>（可以为vanilla RNN, LSTM, GRU)，那么hidden state为</p>
+<p><span class="math inline">\(h_t=f(x_t, h_{t-1})\)</span></p>
+<p>编码器的context vector是所有时刻hidden state的函数，即：</p>
+<p><span class="math inline">\(c=q(h_1,\ldots,h_T)\)</span></p>
+<p>简单地，我们可以把最终时刻的hidden state <span class="math inline">\(h_T\)</span>作为context vecter。当然我们也可以取各个时刻hidden states的平均，以及其他方法。</p>
+<h3 id="解码器-decoder">解码器 Decoder</h3>
+<p>编码器最终输出一个context vector <span class="math inline">\(c\)</span>，该context vector编码了输入序列<span class="math inline">\(x_1, x_2,\ldots,x_T\)</span>的信息。</p>
+<p>假设训练数据中的输出序列为<span class="math inline">\(y_1, y_2,\ldots,y_T&#39;\)</span>,我们希望每个<span class="math inline">\(t\)</span>时刻的输出即取决于之前的输出也取决于context vector，即估计<span class="math inline">\(\mathbb{P}(y_{t&#39;}|y_1,\ldots,y_{t&#39;-1}, c)\)</span>，从而得到输出序列的联合概率分布：</p>
+<p><span class="math inline">\(\mathbb{P}(y_1,\ldots,y_{T&#39;})=\prod_{t&#39;=1}^{T&#39;}\mathbb{P}(y_{t&#39;}|y_1,\ldots,y_{t&#39;-1},c)\)</span></p>
+<p>并定义该序列的损失函数loss function</p>
+<p><span class="math inline">\(-\log\mathbb{P}(y_1,\ldots,y_{T&#39;})\)</span></p>
+<p>通过最小化损失函数来训练seq2seq模型。</p>
+<p>那么如何估计<span class="math inline">\(\mathbb{P}(y_{t&#39;}|y_1,\ldots,y_{t&#39;-1}, c)\)</span>？</p>
+<p>我们使用另一个循环神经网络作为解码器。解码器使用函数<span class="math inline">\(p\)</span>来表示<span class="math inline">\(t&#39;\)</span>时刻输出<span class="math inline">\(y_{t&#39;}\)</span>的概率</p>
+<p><span class="math inline">\(\mathbb{P}(y_{t&#39;}|y_1,\ldots,y_{t&#39;-1}, c)=p(y_{t&#39;-1},s_{t&#39;},c)\)</span></p>
+<p>为了区分编码器中的hidden state <span class="math inline">\(h_t\)</span>，其中<span class="math inline">\(s_{t&#39;}\)</span>为<span class="math inline">\(t&#39;\)</span>时刻解码器的hidden state。区别于编码器，解码器中的循环神经网络的输入除了前一个时刻的输出序列<span class="math inline">\(y_{t&#39;-1}\)</span>，和前一个时刻的hidden state <span class="math inline">\(s_{t&#39;-1}\)</span>以外，还包含了context vector <span class="math inline">\(c\)</span>。即：</p>
+<p><span class="math inline">\(s_{t&#39;}=g(y_{t&#39;-1},s_{t&#39;-1},c)\)</span></p>
+<p>其中函数g为解码器的循环神经网络单元。</p>
+<h2 id="什么叫注意力机制-attention-based-mechanism">什么叫注意力机制？ Attention-based mechanism</h2>
+<p>我们注意到，在以上的解码器设计中，各个时刻使用了相同的context vector。</p>
+<blockquote>
+<p>以英语-法语翻译为例，给定一对输入序列“they are watching”和输出序列“Ils regardent”，解码器在时刻1可以使用更多编码了“they are”信息的背景向量来生成“Ils”，而在时刻2可以使用更多编码了“watching”信息的背景向量来生成“regardent”。这看上去就像是在解码器的每一时刻对输入序列中不同时刻分配不同的注意力。这也是注意力机制的由来。</p>
+</blockquote>
+<p>我们自然地想到了可以在不同时刻采用不同的context vector。对上述编码器稍加修改，将<span class="math inline">\(c\)</span>改为<span class="math inline">\(c_{t&#39;}\)</span>，<span class="math inline">\(c_{t&#39;}\)</span>代表<span class="math inline">\(t&#39;\)</span>时刻的context vector。那么<span class="math inline">\(t&#39;\)</span>时刻解码器的hidden state为</p>
+<p><span class="math inline">\(s_{t&#39;}=g(y_{t&#39;-1},s_{t&#39;-1},c_{t&#39;})\)</span></p>
+<p>如何对不同时刻设计不同context vector <span class="math inline">\(c_{t&#39;}\)</span>？原先我们直接取编码器hidden state <span class="math inline">\(h_t\)</span>的平均或者最后一个值，那么一个自然的想法是取<span class="math inline">\(h_t\)</span>的加权平均，即：</p>
+<p><span class="math inline">\(c_{t&#39;}=\sum_{t=1}^T \alpha_{t&#39;t}h_t\)</span></p>
+<p>如何计算权重<span class="math inline">\(\alpha_{t&#39;t}\)</span>？先设计一个<span class="math inline">\(e_{t&#39;t}\)</span>，再用<span class="math inline">\(e_{t&#39;t}\)</span>计算softmax以输出概率。</p>
+<p><span class="math display">\[\alpha_{t&#39;t} = \frac{\exp(e_{t&#39;t})}{ \sum_{k=1}^T \exp(e_{t&#39;k}) }\]</span></p>
+<p>如何设计<span class="math inline">\(e_{t&#39;t}\)</span>？可以认为<span class="math inline">\(e_{t&#39;t}\)</span>与当前时刻编码器的hidden state <span class="math inline">\(h_t\)</span>，以及上一个时刻解码器的hidden state <span class="math inline">\(s_{t&#39;-1}\)</span>有关，即：</p>
+<p><span class="math display">\[e_{t&#39;t}=a(s_{t&#39;-1}, h_t)\]</span></p>
+<p>对于函数<span class="math inline">\(a\)</span>的选取，研究者提出了不同的方案。在Bahanau的论文中，</p>
+<p><span class="math display">\[e_{t&#39;t}=v^Ttanh(W_ss_{t&#39;-1}+W_hh_t)\]</span>。即对<span class="math inline">\(s_{t&#39;-1}\)</span>与<span class="math inline">\(h_t\)</span>分别乘以一个矩阵转为向量，再用tanh激活，得到一个向量。因为输出是一个scalar，再乘以向量<span class="math inline">\(v^T\)</span>转为标量。其中<span class="math inline">\(v\)</span>、<span class="math inline">\(W_s\)</span>、<span class="math inline">\(W_h\)</span>都是需要学习的模型参数。</p>
 
       
     </div>
@@ -331,14 +376,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/05/02/rnn/" rel="next" title="RNN及其变种：GRU，LSTM">
+                <i class="fa fa-chevron-left"></i> RNN及其变种：GRU，LSTM
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/08/machine-learning-courses/" rel="prev" title="Machine learning courses">
-                Machine learning courses <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/03/DARNN/" rel="prev" title="A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction">
+                A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -396,8 +445,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -464,6 +522,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seq模型"><span class="nav-number">1.</span> <span class="nav-text">seq2seq模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编码器-encoder"><span class="nav-number">1.1.</span> <span class="nav-text">编码器 Encoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解码器-decoder"><span class="nav-number">1.2.</span> <span class="nav-text">解码器 Decoder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么叫注意力机制-attention-based-mechanism"><span class="nav-number">2.</span> <span class="nav-text">什么叫注意力机制？ Attention-based mechanism</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

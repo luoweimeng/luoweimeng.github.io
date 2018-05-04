@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="Deep neural network： \[H = \phi(XW_{xh} + b_n)\] Assume the length of hidden layer is \(h\), input is\(X\in \mathbb{R}^{n \times x}\), weight is \(W_{xh}\in \mathbb{R}^{x \times h}\), bias is\(b\in \m">
+<meta name="description" content="Deep neural network： \[H = \phi(XW_{xh} + b_n)\] 假设hidden state的size为\(h\), 输入为\(X\in \mathbb{R}^{n \times x}\), weight为\(W_{xh}\in \mathbb{R}^{x \times h}\), bias为\(b\in \mathbb{R}^{1 \times h}\). 那么">
 <meta property="og:type" content="article">
-<meta property="og:title" content="seq2seq">
-<meta property="og:url" content="http://luoweimeng.github.io/2018/05/02/seq2seq/index.html">
+<meta property="og:title" content="RNN及其变种：GRU，LSTM">
+<meta property="og:url" content="http://luoweimeng.github.io/2018/05/02/rnn/index.html">
 <meta property="og:site_name" content="Weimeng&#39;s">
-<meta property="og:description" content="Deep neural network： \[H = \phi(XW_{xh} + b_n)\] Assume the length of hidden layer is \(h\), input is\(X\in \mathbb{R}^{n \times x}\), weight is \(W_{xh}\in \mathbb{R}^{x \times h}\), bias is\(b\in \m">
+<meta property="og:description" content="Deep neural network： \[H = \phi(XW_{xh} + b_n)\] 假设hidden state的size为\(h\), 输入为\(X\in \mathbb{R}^{n \times x}\), weight为\(W_{xh}\in \mathbb{R}^{x \times h}\), bias为\(b\in \mathbb{R}^{1 \times h}\). 那么">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-03T21:09:15.079Z">
+<meta property="og:image" content="http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png">
+<meta property="og:updated_time" content="2018-05-04T00:53:02.929Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="seq2seq">
-<meta name="twitter:description" content="Deep neural network： \[H = \phi(XW_{xh} + b_n)\] Assume the length of hidden layer is \(h\), input is\(X\in \mathbb{R}^{n \times x}\), weight is \(W_{xh}\in \mathbb{R}^{x \times h}\), bias is\(b\in \m">
+<meta name="twitter:title" content="RNN及其变种：GRU，LSTM">
+<meta name="twitter:description" content="Deep neural network： \[H = \phi(XW_{xh} + b_n)\] 假设hidden state的size为\(h\), 输入为\(X\in \mathbb{R}^{n \times x}\), weight为\(W_{xh}\in \mathbb{R}^{x \times h}\), bias为\(b\in \mathbb{R}^{1 \times h}\). 那么">
+<meta name="twitter:image" content="http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://luoweimeng.github.io/2018/05/02/seq2seq/"/>
+  <link rel="canonical" href="http://luoweimeng.github.io/2018/05/02/rnn/"/>
 
 
 
 
 
-  <title>seq2seq | Weimeng's</title>
+  <title>RNN及其变种：GRU，LSTM | Weimeng's</title>
   
 
 
@@ -242,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/02/seq2seq/">
+    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/02/rnn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Weimeng Luo">
@@ -259,7 +261,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">seq2seq</h1>
+          <h1 class="post-title" itemprop="name headline">RNN及其变种：GRU，LSTM</h1>
         
 
         <div class="post-meta">
@@ -311,32 +313,52 @@
       
         <h2 id="deep-neural-network">Deep neural network：</h2>
 <p><span class="math display">\[H = \phi(XW_{xh} + b_n)\]</span></p>
-<p>Assume the length of hidden layer is <span class="math inline">\(h\)</span>, input is<span class="math inline">\(X\in \mathbb{R}^{n \times x}\)</span>, weight is <span class="math inline">\(W_{xh}\in \mathbb{R}^{x \times h}\)</span>, bias is<span class="math inline">\(b\in \mathbb{R}^{1 \times h}\)</span>. The output of hidden layer is <span class="math inline">\(H \in \mathbb{R}^{n \times h}\)</span></p>
-<p>Use the output of hiidden layer (hidden state) as the input to the output layer (a dense layer followed by the softmax operation), we could get the output <span class="math inline">\(Y\)</span>:</p>
+<p>假设hidden state的size为<span class="math inline">\(h\)</span>, 输入为<span class="math inline">\(X\in \mathbb{R}^{n \times x}\)</span>, weight为<span class="math inline">\(W_{xh}\in \mathbb{R}^{x \times h}\)</span>, bias为<span class="math inline">\(b\in \mathbb{R}^{1 \times h}\)</span>. 那么hidden layer的输出为<span class="math inline">\(H \in \mathbb{R}^{n \times h}\)</span></p>
+<p>使用hidden layer的输出(hidden state)来作为output layer的输入(a dense layer followed by the softmax operation),我们可以得到输出 <span class="math inline">\(Y\)</span>:</p>
 <p><span class="math display">\[Y = \text{softmax}(HW_{hy}+b_y) \]</span></p>
 <a id="more"></a>
 <h2 id="rnnrecurrent-neural-network">RNN(Recurrent neural network)：</h2>
-<p>将上面的网络改为RNN，我们首先对输入输出加入时间戳。现在的输入为<span class="math inline">\(X_t\in \mathbb{R}^{n \times x}\)</span>，即序列中第<span class="math inline">\(t\)</span>个批量输入（样本数为n，feature数为x），对应的隐含层输出为<span class="math inline">\(H_t \in \mathbb{R}^{n \times h}\)</span>。现在在计算<span class="math inline">\(H_t\)</span>时，我们不仅需要考虑<span class="math inline">\(X_t\)</span>，还需要考虑前一个时刻的隐含层输出<span class="math inline">\(H_{t-1}\)</span>。故而新的隐含层计算公式为：</p>
+<p>将上面的网络改为RNN，我们首先对输入输出加入时间戳。现在的输入为<span class="math inline">\(X_t\in \mathbb{R}^{n \times x}\)</span>，即序列中第<span class="math inline">\(t\)</span>个批量输入（样本数为n，feature数为x），对应的隐含层输出为<span class="math inline">\(H_t \in \mathbb{R}^{n \times h}\)</span>。现在在计算<span class="math inline">\(H_t\)</span>时，我们不仅需要考虑<span class="math inline">\(X_t\)</span>，还需要考虑前一个时刻的隐含层输出<span class="math inline">\(H_{t-1}\)</span>。即<span class="math inline">\(H_t=f(X_t, H_{t-1})\)</span>。故而新的隐含层计算公式为：</p>
 <p><span class="math display">\[H_t = \phi(X_tW_{xh} + H_{t-1}W_{hh} + b_n)\]</span></p>
 <p>最终<span class="math inline">\(t\)</span>时刻的输出<span class="math inline">\(Y_t\)</span>与前面一致：</p>
 <p><span class="math display">\[Y_t = \text{softmax}(H_tW_{hy}+b_y) \]</span></p>
 <p>现在，新的隐含状态<span class="math inline">\(H_t\)</span>与之前所有时刻的输入<span class="math inline">\(X_t&#39;, t&#39; \in\{1,2,...,t-1\}\)</span>有关。故而可以说，隐含状态<span class="math inline">\(H_t\)</span>可以认为是这个网络的记忆，它储存了前面时刻的信息。</p>
+<h2 id="grugated-recurrent-neural-network-unit">GRU(Gated Recurrent neural network Unit)</h2>
+<h3 id="重置门更新门-reset-gate-update-gate">重置门，更新门 Reset gate, Update gate</h3>
+<p>类似地，给定序列中第<span class="math inline">\(t\)</span>个批量输入和前一个时刻的隐含层输出<span class="math inline">\(H_{t-1}\)</span>，我们定义重置门(reset gate)<span class="math inline">\(R_t \in \mathbb{R}^{n \times h}\)</span>和更新门<span class="math inline">\(Z_t \in \mathbb{R}^{n \times h}\)</span></p>
+<p><span class="math display">\[R_t = \sigma(X_tW_{xr}+H_{t-1}W_{hr}+b_r)\]</span> <span class="math display">\[Z_t = \sigma(X_tW_{xz}+H_{t-1}W_{hz}+b_z)\]</span></p>
+<p>对比<span class="math inline">\(H_t\)</span>的计算公式可以看到，重置门与更新门只是选取了sigmoid function <span class="math inline">\(\sigma(x)=1/(1+e^{-x})\)</span>作为激活函数，从而使值域为[0,1]，以模拟门的行为。</p>
+<h3 id="候选隐含状态-candidate-hidden-state">候选隐含状态 Candidate hidden state</h3>
+<p>我们可以通过元素值域在[0,1]的更新门和重置门来控制隐含状态中信息的流动：这通常可以应用按元素乘法符<span class="math inline">\(\odot\)</span>。</p>
+<p><span class="math inline">\(\tilde{H}_t=tanh(X_tW_{xh}+R_t\odot H_{t-1}W_hh+b_n)\)</span></p>
+<p>可以看到，候选隐含状态使用重置门<span class="math inline">\(R_t\)</span>来控制包含过去信息的前一个hidden state <span class="math inline">\(H_{t-1}\)</span>的流入。如果重置门近似0，上一个隐含状态将被丢弃。因此，重置门提供了丢弃与未来无关的过去隐含状态的机制。</p>
+<h3 id="隐含状态-hidden-state">隐含状态 Hidden state</h3>
+<p>隐含状态hidden state <span class="math inline">\(H_t\)</span>使用更新门<span class="math inline">\(Z_t\)</span>来组合上一个时刻的hidden state <span class="math inline">\(H_{t-1}\)</span>及当前时刻的Candidate hidden state <span class="math inline">\(\tilde{H}_t\)</span>。</p>
+<p><span class="math inline">\(H_t=Z_t \odot H_{t-1} + (1-Z_t) \odot \tilde{H}_t\)</span></p>
+<blockquote>
+<p>需要注意的是，更新门可以控制过去的隐含状态在当前时刻的重要性。如果更新门一直近似1，过去的隐含状态将一直通过时间保存并传递至当前时刻。这个设计可以应对循环神经网络中的梯度衰减问题，并更好地捕捉时序数据中间隔较大的依赖关系。 重置门有助于捕捉时序数据中短期的依赖关系。 更新门有助于捕捉时序数据中长期的依赖关系。</p>
+</blockquote>
 <h2 id="lstmlong-short-term-memory">LSTM(Long Short-Term Memory):</h2>
+<p>比GRU和vanilla RNN更为复杂的是，LSTM的隐含状态不仅包含了隐含层变量<span class="math inline">\(H\)</span>，同时还有记忆细胞<span class="math inline">\(C\)</span>(cell state).</p>
+<div class="figure">
+<img src="http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png" alt="LSTM">
+<p class="caption">LSTM</p>
+</div>
 <h3 id="input-gate-forget-gate-output-gate">Input gate, forget gate, output gate</h3>
-<p>To solve the problem of vinishing gradient and better capture long-term dependencies of time series, a network called long short-term memory is proposed. The input of LSTM is same as the vanilla RNN, which is the current input <span class="math inline">\(X_t\in \mathbb{R}^{n \times x}\)</span>, and the previous hidden state <span class="math inline">\(H_{t-1} \in \mathbb{R}^{n \times h}\)</span>.</p>
-<p>We can calculate the input gate <span class="math inline">\(I_t \in \mathbb{R}^{n \times h}\)</span>, forget gate <span class="math inline">\(F_t \in \mathbb{R}^{n \times h}\)</span>, output gate <span class="math inline">\(O_t \in \mathbb{R}^{n \times h}\)</span> by following equations:</p>
-<p><span class="math display">\[I_t = \sigma(X_tW_{xi}+H_{t-1}W_{hi}+b_i\]</span> <span class="math display">\[F_t = \sigma(X_tW_{xf}+H_{t-1}W_{hf}+b_f\]</span> <span class="math display">\[O_t = \sigma(X_tW_{xo}+H_{t-1}W_{ho}+b_o)\]</span></p>
+<p>为了解决梯度消失(vinishing gradient)并更好地把握时间序列的长期依赖关系(long-term dependencies of time series)，研究者提出了长短期记忆网络(LSTM)。 LSTM的输入和vanilla RNN一样, 即当前时刻输入<span class="math inline">\(X_t\in \mathbb{R}^{n \times x}\)</span>, 和前一个时刻的hidden state <span class="math inline">\(H_{t-1} \in \mathbb{R}^{n \times h}\)</span>.</p>
+<p>接下来，我们可以计算输入门 <span class="math inline">\(I_t \in \mathbb{R}^{n \times h}\)</span>, forget gate <span class="math inline">\(F_t \in \mathbb{R}^{n \times h}\)</span>, 输出门 <span class="math inline">\(O_t \in \mathbb{R}^{n \times h}\)</span>:</p>
+<p><span class="math display">\[I_t = \sigma(X_tW_{xi}+H_{t-1}W_{hi}+b_i)\]</span> <span class="math display">\[F_t = \sigma(X_tW_{xf}+H_{t-1}W_{hf}+b_f)\]</span> <span class="math display">\[O_t = \sigma(X_tW_{xo}+H_{t-1}W_{ho}+b_o)\]</span></p>
 <p>LSTM使用cell state来传递信息，并且可以通过门的机制来加入或删除信息。具体来说，sigmoid函数可以用来控制信息传递，0意味着不让信息通过，1意味着信息可以通过。</p>
-<h3 id="candidate-cell">Candidate cell</h3>
+<h3 id="候选隐含状态-candidate-cell-state">候选隐含状态 Candidate cell state</h3>
 <p>Candidate cell <span class="math inline">\(\tilde{C} \in \mathbb{R}^{n \times h}\)</span> 使用了值域在[-1,1]的双曲正切函数tanh做激活函数</p>
-<p><span class="math display">\[\tilde{C}=tanh(X_tW_{xc}+H_{t-1}W_{hc}+b_c\]</span></p>
-<h3 id="cell-state">Cell state</h3>
-<p>We use the input gate and forget gate to control the information flow between <em>cell states</em>.</p>
+<p><span class="math display">\[\tilde{C}_t=tanh(X_tW_{xc}+H_{t-1}W_{hc}+b_c)\]</span></p>
+<h3 id="记忆细胞状态-cell-state">记忆细胞状态 Cell state</h3>
+<p>我们可以通过输入门来控制信息在<em>cell states</em>间的流动</p>
 <p><span class="math display">\[C_t=F_t \odot C_{t-1} + I_t \odot \tilde{C}_t\]</span></p>
-<h3 id="hidden-state">Hidden state</h3>
-<p>Finally, we use output gate to control the information flow from <em>cell state</em> to <em>hidden state</em>.</p>
+<h3 id="隐含层变量-hidden-state">隐含层变量 Hidden state</h3>
+<p>最后，我们可以通过输出门来控制信息从<em>cell state</em>到<em>hidden state</em>的流动。</p>
 <p><span class="math display">\[H_t=O_t \odot tanh(C_t) \]</span></p>
-<h2 id="seq2seqsequence-to-sequence-model">Seq2seq(sequence to sequence model)</h2>
+<p>对LSTM的更详细解释可以参见<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTMs</a></p>
 <h2 id="reference">Reference:</h2>
 <p>http://zh.gluon.ai/chapter_recurrent-neural-networks/lstm-scratch.html http://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
 
@@ -372,6 +394,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/03/seq2seq/" rel="prev" title="Seq2seq模型及注意力机制">
+                Seq2seq模型及注意力机制 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -453,7 +479,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -515,7 +541,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#deep-neural-network"><span class="nav-number">1.</span> <span class="nav-text">Deep neural network：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnnrecurrent-neural-network"><span class="nav-number">2.</span> <span class="nav-text">RNN(Recurrent neural network)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lstmlong-short-term-memory"><span class="nav-number">3.</span> <span class="nav-text">LSTM(Long Short-Term Memory):</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#input-gate-forget-gate-output-gate"><span class="nav-number">3.1.</span> <span class="nav-text">Input gate, forget gate, output gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#candidate-cell"><span class="nav-number">3.2.</span> <span class="nav-text">Candidate cell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cell-state"><span class="nav-number">3.3.</span> <span class="nav-text">Cell state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hidden-state"><span class="nav-number">3.4.</span> <span class="nav-text">Hidden state</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seq2seqsequence-to-sequence-model"><span class="nav-number">4.</span> <span class="nav-text">Seq2seq(sequence to sequence model)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference:</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#deep-neural-network"><span class="nav-number">1.</span> <span class="nav-text">Deep neural network：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnnrecurrent-neural-network"><span class="nav-number">2.</span> <span class="nav-text">RNN(Recurrent neural network)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grugated-recurrent-neural-network-unit"><span class="nav-number">3.</span> <span class="nav-text">GRU(Gated Recurrent neural network Unit)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重置门更新门-reset-gate-update-gate"><span class="nav-number">3.1.</span> <span class="nav-text">重置门，更新门 Reset gate, Update gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#候选隐含状态-candidate-hidden-state"><span class="nav-number">3.2.</span> <span class="nav-text">候选隐含状态 Candidate hidden state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐含状态-hidden-state"><span class="nav-number">3.3.</span> <span class="nav-text">隐含状态 Hidden state</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lstmlong-short-term-memory"><span class="nav-number">4.</span> <span class="nav-text">LSTM(Long Short-Term Memory):</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#input-gate-forget-gate-output-gate"><span class="nav-number">4.1.</span> <span class="nav-text">Input gate, forget gate, output gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#候选隐含状态-candidate-cell-state"><span class="nav-number">4.2.</span> <span class="nav-text">候选隐含状态 Candidate cell state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#记忆细胞状态-cell-state"><span class="nav-number">4.3.</span> <span class="nav-text">记忆细胞状态 Cell state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐含层变量-hidden-state"><span class="nav-number">4.4.</span> <span class="nav-text">隐含层变量 Hidden state</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">5.</span> <span class="nav-text">Reference:</span></a></li></ol></div>
             
 
           </div>

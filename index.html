@@ -239,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/02/seq2seq/">
+    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/03/DARNN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Weimeng Luo">
@@ -258,7 +258,256 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/02/seq2seq/" itemprop="url">seq2seq</a></h1>
+                <a class="post-title-link" href="/2018/05/03/DARNN/" itemprop="url">A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-03T20:30:46-04:00">
+                2018-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>论文参见<a href="https://arxiv.org/abs/1704.02971" target="_blank" rel="noopener">A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction</a></p>
+<p>论文题目为《基于双阶段注意力机制的循环神经网络》。第一阶段，使用注意力机制自适应地提取每个时刻的相关feature；第二阶段，使用另一个注意力机制选取与之相关的encoder hidden states。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/03/DARNN/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/03/seq2seq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Weimeng Luo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Weimeng's">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/03/seq2seq/" itemprop="url">Seq2seq模型及注意力机制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-03T17:12:28-04:00">
+                2018-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在上一篇文章中，我们介绍了传统的RNN及其变种GRU及LSTM。它们只能处理输出序列为定长的情况。如果要处理输出序列为不定长情况的问题呢？例如机器翻译，例如英文到法语的句子翻译，输入和输出均为不定长。前人提出了seq2seq模型，basic idea是设计一个encoder与decoder，其中encoder将输入序列编码为一个包含输入序列所有信息的context vector <span class="math inline">\(c\)</span>，decoder通过对<span class="math inline">\(c\)</span>的解码获得输入序列的信息，从而得到输出序列。encoder及decoder都通常为RNN循环神经网络。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/03/seq2seq/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/02/rnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Weimeng Luo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Weimeng's">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/02/rnn/" itemprop="url">RNN及其变种：GRU，LSTM</a></h1>
         
 
         <div class="post-meta">
@@ -311,12 +560,12 @@
         
           <h2 id="deep-neural-network">Deep neural network：</h2>
 <p><span class="math display">\[H = \phi(XW_{xh} + b_n)\]</span></p>
-<p>Assume the length of hidden layer is <span class="math inline">\(h\)</span>, input is<span class="math inline">\(X\in \mathbb{R}^{n \times x}\)</span>, weight is <span class="math inline">\(W_{xh}\in \mathbb{R}^{x \times h}\)</span>, bias is<span class="math inline">\(b\in \mathbb{R}^{1 \times h}\)</span>. The output of hidden layer is <span class="math inline">\(H \in \mathbb{R}^{n \times h}\)</span></p>
-<p>Use the output of hiidden layer (hidden state) as the input to the output layer (a dense layer followed by the softmax operation), we could get the output <span class="math inline">\(Y\)</span>:</p>
+<p>假设hidden state的size为<span class="math inline">\(h\)</span>, 输入为<span class="math inline">\(X\in \mathbb{R}^{n \times x}\)</span>, weight为<span class="math inline">\(W_{xh}\in \mathbb{R}^{x \times h}\)</span>, bias为<span class="math inline">\(b\in \mathbb{R}^{1 \times h}\)</span>. 那么hidden layer的输出为<span class="math inline">\(H \in \mathbb{R}^{n \times h}\)</span></p>
+<p>使用hidden layer的输出(hidden state)来作为output layer的输入(a dense layer followed by the softmax operation),我们可以得到输出 <span class="math inline">\(Y\)</span>:</p>
 <p><span class="math display">\[Y = \text{softmax}(HW_{hy}+b_y) \]</span></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/02/seq2seq/#more" rel="contents">
+            <a class="btn" href="/2018/05/02/rnn/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -890,7 +1139,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

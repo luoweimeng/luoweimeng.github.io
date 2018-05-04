@@ -79,14 +79,17 @@
 
 
 
+<meta name="description" content="论文参见A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction 论文题目为《基于双阶段注意力机制的循环神经网络》。第一阶段，使用注意力机制自适应地提取每个时刻的相关feature；第二阶段，使用另一个注意力机制选取与之相关的encoder hidden states。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="first-post">
-<meta property="og:url" content="http://luoweimeng.github.io/2018/04/08/first-post/index.html">
+<meta property="og:title" content="A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction">
+<meta property="og:url" content="http://luoweimeng.github.io/2018/05/03/DARNN/index.html">
 <meta property="og:site_name" content="Weimeng&#39;s">
+<meta property="og:description" content="论文参见A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction 论文题目为《基于双阶段注意力机制的循环神经网络》。第一阶段，使用注意力机制自适应地提取每个时刻的相关feature；第二阶段，使用另一个注意力机制选取与之相关的encoder hidden states。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-04-08T21:30:22.452Z">
+<meta property="og:updated_time" content="2018-05-04T00:50:43.063Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="first-post">
+<meta name="twitter:title" content="A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction">
+<meta name="twitter:description" content="论文参见A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction 论文题目为《基于双阶段注意力机制的循环神经网络》。第一阶段，使用注意力机制自适应地提取每个时刻的相关feature；第二阶段，使用另一个注意力机制选取与之相关的encoder hidden states。">
 
 
 
@@ -116,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://luoweimeng.github.io/2018/04/08/first-post/"/>
+  <link rel="canonical" href="http://luoweimeng.github.io/2018/05/03/DARNN/"/>
 
 
 
 
 
-  <title>first-post | Weimeng's</title>
+  <title>A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction | Weimeng's</title>
   
 
 
@@ -239,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/04/08/first-post/">
+    <link itemprop="mainEntityOfPage" href="http://luoweimeng.github.io/2018/05/03/DARNN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Weimeng Luo">
@@ -256,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">first-post</h1>
+          <h1 class="post-title" itemprop="name headline">A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction</h1>
         
 
         <div class="post-meta">
@@ -268,8 +271,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-08T17:30:22-04:00">
-                2018-04-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-03T20:30:46-04:00">
+                2018-05-03
               </time>
             
 
@@ -306,7 +309,13 @@
       
 
       
-        
+        <p>论文参见<a href="https://arxiv.org/abs/1704.02971" target="_blank" rel="noopener">A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction</a></p>
+<p>论文题目为《基于双阶段注意力机制的循环神经网络》。第一阶段，使用注意力机制自适应地提取每个时刻的相关feature；第二阶段，使用另一个注意力机制选取与之相关的encoder hidden states。</p>
+<a id="more"></a>
+<p>我们定义<span class="math inline">\(H_t \in \mathbb{R}^m\)</span>为encoder在时刻<span class="math inline">\(t\)</span>的hidden state, 其中<span class="math inline">\(m\)</span>是hidden state的size。</p>
+<h2 id="使用input-attention的编码器">使用input attention的编码器</h2>
+<p>第一阶段，使用当前时刻的输入<span class="math inline">\(x_t \in \mathbb{R}^n\)</span>，以及上一个时刻编码器的hidden state <span class="math inline">\(H_{t-1}\)</span>，来计算当前时刻编码器的hidden state <span class="math inline">\(H_t\)</span>。对于这个问题，我们可以使用通常的循环神经网络vanilla RNN或LSTM以及GRU。但为了自适应地选取相关feature，作者在此处引入了注意力机制。简单来说，传统的seq2seq模型中，</p>
+<h2 id="使用temporal-attention的解码器">使用temporal attention的解码器</h2>
 
       
     </div>
@@ -331,15 +340,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/05/03/seq2seq/" rel="next" title="Seq2seq模型及注意力机制">
+                <i class="fa fa-chevron-left"></i> Seq2seq模型及注意力机制
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/08/machine-learning-courses/" rel="prev" title="Machine learning courses">
-                Machine learning courses <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -396,8 +405,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -464,6 +482,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用input-attention的编码器"><span class="nav-number">1.</span> <span class="nav-text">使用input attention的编码器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用temporal-attention的解码器"><span class="nav-number">2.</span> <span class="nav-text">使用temporal attention的解码器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
