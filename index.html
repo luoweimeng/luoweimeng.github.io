@@ -559,9 +559,10 @@
       
         
           <h2 id="deep-neural-network">Deep neural network：</h2>
+<p>先考虑简单的只有一个hidden layer的神经网络。</p>
+<p>假设hidden state的size为<span class="math inline">\(h\)</span>, 输入为<span class="math inline">\(X\in \mathbb{R}^{n \times x}\)</span>, weight为<span class="math inline">\(W_{xh}\in \mathbb{R}^{x \times h}\)</span>, bias为<span class="math inline">\(b\in \mathbb{R}^{1 \times h}\)</span>。那么hidden layer的输出为<span class="math inline">\(H \in \mathbb{R}^{n \times h}\)</span>。 简单说来hidden layer的操作就是先将输入<span class="math inline">\(X\)</span>通过线性变换<span class="math inline">\(XW_{xh} + b_n\)</span>，然后再用激活函数(activation function) <span class="math inline">\(\phi\)</span> 激活。</p>
 <p><span class="math display">\[H = \phi(XW_{xh} + b_n)\]</span></p>
-<p>假设hidden state的size为<span class="math inline">\(h\)</span>, 输入为<span class="math inline">\(X\in \mathbb{R}^{n \times x}\)</span>, weight为<span class="math inline">\(W_{xh}\in \mathbb{R}^{x \times h}\)</span>, bias为<span class="math inline">\(b\in \mathbb{R}^{1 \times h}\)</span>. 那么hidden layer的输出为<span class="math inline">\(H \in \mathbb{R}^{n \times h}\)</span></p>
-<p>使用hidden layer的输出(hidden state)来作为output layer的输入(a dense layer followed by the softmax operation),我们可以得到输出 <span class="math inline">\(Y\)</span>:</p>
+<p>接着看输出层：使用hidden layer的输出(hidden state)来作为output layer的输入(a dense layer followed by the softmax operation)。输出层可以认为又是一个线性变换，再加上softmax函数激活它。我们可以得到输出 <span class="math inline">\(Y\)</span> （可认为是该类别的概率）:</p>
 <p><span class="math display">\[Y = \text{softmax}(HW_{hy}+b_y) \]</span></p>
           <!--noindex-->
           <div class="post-button text-center">
